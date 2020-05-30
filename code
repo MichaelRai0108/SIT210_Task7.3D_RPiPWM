@@ -48,11 +48,11 @@ try:
             print("Proper distance")
             pwmLED.ChangeDutyCycle(50)
         
-        elif(distance > 55 and distance <=60):
+        elif(distance > 55 and distance <=70):
             print ("Far")
             pwmLED.ChangeDutyCycle(75)
         
-        elif(distance > 60):
+        elif(distance > 70):
             print("Too Far")
             pwmLED.ChangeDutyCycle(100)
 except KeyboardInterrupt:
