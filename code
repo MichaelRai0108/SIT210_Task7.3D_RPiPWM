@@ -1,0 +1,61 @@
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BCM)
+
+LED = 4
+Trig = 3
+Echo = 2
+GPIO.setup(Trig,GPIO.OUT)
+GPIO.setup(Echo,GPIO.IN)
+GPIO.setup(LED,GPIO.OUT)
+
+
+pwmLED = GPIO.PWM(LED,200)
+pwmLED.start(50)
+
+
+try:
+    while True:
+        GPIO.output(Trig, False)
+        print("Waiting for sensor to settle")
+        time.sleep(0.50)
+        GPIO.output(Trig, True)
+        time.sleep(0.00001)
+        GPIO.output(Trig, False)
+        while GPIO.input(Echo) ==0:
+            pulse_start = time.time()
+            
+        while GPIO.input(Echo) ==1:
+            pulse_end = time.time()
+            
+        pulse_duration = pulse_end - pulse_start
+        
+        distance = pulse_duration * 17150
+        
+        distance = round(distance, 2)
+        
+        print("Distance: ",distance," cm")
+        if(distance >0 and distance <= 20):
+            print("Too Close")
+            pwmLED.ChangeDutyCycle(00)
+        
+            
+        elif(distance >20 and distance <= 35):
+            print("Close")
+            pwmLED.ChangeDutyCycle(25)
+        
+        elif(distance >35 and distance <= 55):
+            print("Proper distance")
+            pwmLED.ChangeDutyCycle(50)
+        
+        elif(distance > 55 and distance <=60):
+            print ("Far")
+            pwmLED.ChangeDutyCycle(75)
+        
+        elif(distance > 60):
+            print("Too Far")
+            pwmLED.ChangeDutyCycle(100)
+except KeyboardInterrupt:
+    print("Cleaning up!")
+    gpio.cleanup()
+    exit
